@@ -1,16 +1,14 @@
 package com.example.netbankapi.controller;
 
-import com.example.netbankapi.domain.conta.contaCorrente.ContaCorrente;
-import com.example.netbankapi.domain.conta.contaCorrente.ContaCorrenteRepository;
-import com.example.netbankapi.domain.conta.contaCorrente.DadosCadastroContaCorrente;
+import com.example.netbankapi.domain.conta.contaCorrente.*;
+import com.example.netbankapi.domain.exceptions.SaldoInsuficiente;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("contas")
@@ -27,6 +25,29 @@ public class ContaController {
         contaCorrenteRepository.save(conta);
 
         return ResponseEntity.ok().build();
+
+    }
+
+    @PutMapping("/deposito")
+    @Transactional
+    public ResponseEntity deposito(@RequestBody @Valid DadosDeposito dados){
+
+        var conta = contaCorrenteRepository.getReferenceById(dados.id());
+
+        conta.deposita(dados);
+
+        return ResponseEntity.ok("Deposito efetuado com sucesso - " + LocalDateTime.now());
+    }
+
+    @PutMapping("/saque")
+    @Transactional
+    public ResponseEntity saque(@RequestBody @Valid DadosSaque dados) throws SaldoInsuficiente {
+
+        var conta = contaCorrenteRepository.getReferenceById(dados.id());
+
+        conta.saque(dados);
+
+        return ResponseEntity.ok("Saque efetuado com sucesso! - " + LocalDateTime.now());
 
     }
 

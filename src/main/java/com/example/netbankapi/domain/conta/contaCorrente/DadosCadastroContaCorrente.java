@@ -7,8 +7,6 @@ import jakarta.validation.constraints.NotNull;
 public record DadosCadastroContaCorrente(
 
         @NotNull
-        Double saldo,
-        @NotNull
         Integer numero,
         @NotNull
         Integer conta,

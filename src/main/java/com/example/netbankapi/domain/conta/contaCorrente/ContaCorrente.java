@@ -24,40 +24,41 @@ public class ContaCorrente extends Conta {
 
     public ContaCorrente (DadosCadastroContaCorrente dados){
         this.dataDeAbertura = LocalDateTime.now();
-        this.setSaldo(dados.saldo());
+        this.setSaldo((double) 0);
         this.setConta(dados.conta());
         this.setNumero(dados.numero());
         this.setCliente(new Cliente(dados.cliente()));
     }
 
     @Override
-    public String saque(Double valor) throws SaldoInsuficiente {
+    public void saque(DadosSaque dadosSaque) throws SaldoInsuficiente {
 
-        if (valor > 0 && this.getSaldo() >= valor) {
-            Double saque = valor + taxaDeSaque;
+        if (dadosSaque.valor() > 0 && this.getSaldo() >= dadosSaque.valor()) {
+            Double saque = dadosSaque.valor() + taxaDeSaque;
             this.setSaldo(this.getSaldo() - saque);
-            return "Saque efetuado com sucesso! - " + LocalDateTime.now();
         } else {
             throw new SaldoInsuficiente("Erro ao sacar, verifique o seu saldo");
         }
     }
 
     @Override
-    public String deposita(Double valor) {
+    public void deposita(DadosDeposito dadosDeposito) throws RuntimeException{
 
-        if (valor > 0) {
-            this.setSaldo(this.getSaldo() + valor);
-            return "Deposito efetuado! - " + LocalDateTime.now();
+        if (dadosDeposito.valor() != null){
+            if (dadosDeposito.valor() > 0) {
+                this.setSaldo(this.getSaldo() + dadosDeposito.valor());
+            }
+            else {
+                throw new RuntimeException();
+            }
         }
-        return null;
     }
 
     @Override
-    public String transferencia(Double valor, Conta contaDestino) throws SaldoInsuficiente {
+    public void transferencia(Double valor, Conta contaDestino) throws SaldoInsuficiente {
         if (valor > 0 && this.getSaldo() >= valor) {
             this.setSaldo(this.getSaldo() - valor);
             contaDestino.setSaldo(contaDestino.getSaldo() + valor);
-            return "Transferência efetuada! - " + LocalDateTime.now();
         } else {
             throw new SaldoInsuficiente("Erro ao transferir, verifique o seu saldo");
         }
