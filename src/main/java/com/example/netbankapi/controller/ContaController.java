@@ -3,12 +3,16 @@ package com.example.netbankapi.controller;
 import com.example.netbankapi.domain.conta.contaCorrente.*;
 import com.example.netbankapi.domain.exceptions.SaldoInsuficiente;
 import jakarta.validation.Valid;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping("contas")
@@ -26,6 +30,12 @@ public class ContaController {
 
         return ResponseEntity.ok().build();
 
+    }
+
+    @GetMapping("/getAll")
+    public ResponseEntity listarContas(){
+        var lista = contaCorrenteRepository.findAll().stream().map(DadosListagemContas::new);
+        return ResponseEntity.status(HttpStatus.OK).body(lista);
     }
 
     @PutMapping("/deposito")
@@ -48,6 +58,19 @@ public class ContaController {
         conta.saque(dados);
 
         return ResponseEntity.ok("Saque efetuado com sucesso! - " + LocalDateTime.now());
+
+    }
+
+    @PutMapping("/transferencia")
+    @Transactional
+    public ResponseEntity transferencia(@RequestBody @Valid DadosTransferencia dados) throws SaldoInsuficiente{
+
+        var contaRemetente = contaCorrenteRepository.getReferenceById(dados.idContaRemetente());
+        var contaDestino = contaCorrenteRepository.getReferenceById(dados.idContaDestino());
+
+        contaRemetente.transferencia(dados.valor(), contaDestino);
+
+        return ResponseEntity.ok("Transferência realizada com sucesso! - " + LocalDateTime.now());
 
     }
 

@@ -22,7 +22,7 @@ public class ContaCorrente extends Conta {
     private Double taxaDeSaque = 5.0;
     private LocalDateTime dataDeAbertura;
 
-    public ContaCorrente (DadosCadastroContaCorrente dados){
+    public ContaCorrente(DadosCadastroContaCorrente dados) {
         this.dataDeAbertura = LocalDateTime.now();
         this.setSaldo((double) 0);
         this.setConta(dados.conta());
@@ -42,13 +42,12 @@ public class ContaCorrente extends Conta {
     }
 
     @Override
-    public void deposita(DadosDeposito dadosDeposito) throws RuntimeException{
+    public void deposita(DadosDeposito dadosDeposito) throws RuntimeException {
 
-        if (dadosDeposito.valor() != null){
+        if (dadosDeposito.valor() != null) {
             if (dadosDeposito.valor() > 0) {
                 this.setSaldo(this.getSaldo() + dadosDeposito.valor());
-            }
-            else {
+            } else {
                 throw new RuntimeException();
             }
         }
@@ -56,11 +55,13 @@ public class ContaCorrente extends Conta {
 
     @Override
     public void transferencia(Double valor, Conta contaDestino) throws SaldoInsuficiente {
+
         if (valor > 0 && this.getSaldo() >= valor) {
             this.setSaldo(this.getSaldo() - valor);
             contaDestino.setSaldo(contaDestino.getSaldo() + valor);
         } else {
             throw new SaldoInsuficiente("Erro ao transferir, verifique o seu saldo");
         }
+
     }
 }
