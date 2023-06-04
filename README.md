@@ -5,9 +5,9 @@
   <h2> 🗂️ Sumário </h2>
     <li><a href="#funcionalidades">Funcionalidades</a></li>
     <li><a href="#tecnologiasUtilizadas">Tecnologias Utilizadas</a></li>
-    <li><a href="#estruturaDoProjeto">Estrutura do Projeto</a></li>
     <li><a href="#configurações">Configurações</a></li>
     <li><a href="#comoExecutar">Como Executar</a></li>
+    <li><a href="#endpoints">Endpoints</a></li>
     <li><a href="#observações">Observações</a></li>
     <li><a href="#autor">Autor</a></li>
     <li><a href="#contatos">Contato</a></li>
