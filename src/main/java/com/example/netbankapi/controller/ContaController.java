@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriBuilder;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -24,18 +25,25 @@ public class ContaController {
     @PostMapping("/novaConta")
     @Transactional
     public ResponseEntity cadastrar(@RequestBody @Valid DadosCadastroContaCorrente dados){
-        var conta = new ContaCorrente(dados);
 
+        var conta = new ContaCorrente(dados);
         contaCorrenteRepository.save(conta);
 
-        return ResponseEntity.ok().build();
-
+        return ResponseEntity.status(HttpStatus.CREATED).body("Conta criada!");
     }
 
     @GetMapping("/getAll")
     public ResponseEntity listarContas(){
         var lista = contaCorrenteRepository.findAll().stream().map(DadosListagemContas::new);
         return ResponseEntity.status(HttpStatus.OK).body(lista);
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public ResponseEntity excluir(@PathVariable Long id){
+        var conta = contaCorrenteRepository.getReferenceById(id);
+        contaCorrenteRepository.delete(conta);
+        return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/deposito")
