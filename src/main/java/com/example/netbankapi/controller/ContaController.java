@@ -29,7 +29,7 @@ public class ContaController {
         var conta = new ContaCorrente(dados);
         contaCorrenteRepository.save(conta);
 
-        return ResponseEntity.status(HttpStatus.CREATED).body("Conta criada!");
+        return ResponseEntity.status(HttpStatus.CREATED).body(new DadosDetalhamentoConta(dados.cliente().nome(), dados.cliente().email(), dados.cliente().cpf(), dados.numero(), dados.conta()));
     }
 
     @GetMapping("/getAll")
